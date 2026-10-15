@@ -6,7 +6,7 @@ O catalogo agora aponta para o payload r2 completo, disponivel para download e v
 
 ## Preparar o cache Offline
 
-1. Atualize a fonte `StarMaker765/Root-My-Galaxy-Payloads`, branch `main`. Selecione o perfil cujo nome inclui `r2 DIAGNOSTIC - isolated modules`.
+1. Atualize a fonte `StarMaker765/Root-My-Galaxy-Payloads`, branch `main`. Selecione `S24 Ultra | KernelSU 3.3.1 r2 (teste)`.
 2. Remova a substituicao em **Local payload** para usar o arquivo publicado. Deixe o modo **Online**, Shizuku e **Install KernelSU** habilitados. Mantenha **Auto soft restart** e as automacoes de root desativadas durante este teste.
 3. Se o KernelSU ja estiver carregado, faca um reinicio completo antes da nova execucao e inicie novamente o Shizuku. O payload recusa carregar por cima de um KernelSU ativo.
 4. Execute uma vez em Online. Confirme tanto o carregamento quanto a mensagem de que o payload foi salvo em cache. Entao selecione Offline para as proximas execucoes.

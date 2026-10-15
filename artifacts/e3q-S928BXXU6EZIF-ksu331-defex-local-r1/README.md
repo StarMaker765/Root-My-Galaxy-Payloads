@@ -1,35 +1,39 @@
-# SM-S928B / EZIF / 6.1.162 — KernelSU 3.3.1 + DEFEX r1
+# SM-S928B / EZIF / 6.1.162 — KernelSU 3.3.1 r2 de diagnostico
 
-Este perfil agora disponibiliza o payload completo para download e cache no Root My Galaxy Next. O proprietário do aparelho relatou funcionamento em 15/10/2026; não houve teste independente em hardware. O arquivo é exatamente o mesmo r1 usado no teste local, sem alterações no exploit ou no auxiliar.
+O catalogo agora aponta para o payload r2 completo, disponivel para download e verificacao no Root My Galaxy Next. O proprietario relatou carregamento do KernelSU e estabilidade nessa execucao da r2. Nao houve teste independente no aparelho nem validacao prolongada.
 
-## Usar o cache Offline
+**Esta variante isola os modulos durante o carregamento.** Ela nao valida o funcionamento completo dos modulos. A verificacao DEFEX do auxiliar permanece pendente: o log fornecido registrou retorno 42, embora o Next tenha confirmado o KernelSU por seus canais independentes. A adaptacao Samsung/DEFEX continua embutida; o retorno nao permite declarar que o bypass esteja confirmado no aparelho.
 
-1. Remova a substituição em Settings > Payload Management > Local payload. Não é mais necessário importar um `.so`.
-2. Atualize a fonte `StarMaker765/Root-My-Galaxy-Payloads`, branch `main`. Se houver uma revisão antiga fixada, libere essa fixação. Selecione `Galaxy S24 Ultra EZIF | 6.1.162 | KSU 3.3.1 + DEFEX | EXPERIMENTAL r1`.
-3. Para uma nova execução, desative o root automático e reinicie normalmente para descarregar o KernelSU anterior. Inicie o Shizuku, mantenha Install KernelSU habilitado e faça uma instalação manual no modo Online.
-4. Após a instalação bem-sucedida, confira se o Next informa que há um payload em cache. Então selecione o modo Offline. A publicação no GitHub permite a verificação dos arquivos; a criação efetiva do cache depende dessa execução no telefone.
+## Preparar o cache Offline
 
-O cache do Next inclui o perfil, o exploit e o daemon verificados, e registra o hash do auxiliar que acompanha o aplicativo. Uma atualização desse auxiliar pode exigir nova execução Online. Reinstalar/limpar os dados do aplicativo também remove o cache.
+1. Atualize a fonte `StarMaker765/Root-My-Galaxy-Payloads`, branch `main`. Selecione o perfil cujo nome inclui `r2 DIAGNOSTIC - isolated modules`.
+2. Remova a substituicao em **Local payload** para usar o arquivo publicado. Deixe o modo **Online**, Shizuku e **Install KernelSU** habilitados. Mantenha **Auto soft restart** e as automacoes de root desativadas durante este teste.
+3. Se o KernelSU ja estiver carregado, faca um reinicio completo antes da nova execucao e inicie novamente o Shizuku. O payload recusa carregar por cima de um KernelSU ativo.
+4. Execute uma vez em Online. Confirme tanto o carregamento quanto a mensagem de que o payload foi salvo em cache. Entao selecione Offline para as proximas execucoes.
 
-## Arquivos e integridade
+A r2 importada anteriormente nao coincidia com o hash r1 declarado no catalogo, o que explicava a recusa do cache. O catalogo agora declara os bytes exatos da r2. Isso corrige a verificacao dos arquivos, mas a gravacao efetiva do cache ainda depende de uma execucao no telefone.
 
-- Payload completo: `payload-S928B-6.1.162-KSU331-DEFEX-r1.so`, 5.715.496 bytes, SHA-256 `99d3a7bd9f79cba40cf0030127c004ca98b9736e2a453fcab6a7ca7799afaea1`.
-- Daemon do perfil: `kernelsu/ksud-e3q-S928BXXU6EZIF-3.3.1-generic-kdp`, 5.566.824 bytes, SHA-256 `3487bde89b33043bd6aa09db68d21a6375aaa126e131fda53b6f6318327b0081`.
-- O antigo `local-payload-required.so` permanece apenas por histórico; este perfil não o utiliza mais.
+## Comportamento da r2
 
-O identificador `e3q-S928BXXU6EZIF-ksu331-defex-local-r1` foi mantido para preservar a identidade do perfil. O sufixo histórico `local` não exige mais um arquivo local.
+O exploit ZZI4 e o daemon Samsung KernelSU 3.3.1 sao identicos aos da r1. O auxiliar usa montagens privadas com diretorios vazios para ocultar, apenas do carregador, os modulos, as atualizacoes pendentes, o backup antigo e os scripts de inicializacao. A r2 nao renomeia ou exclui esses diretorios originais nem altera seus marcadores disable/remove. Outros processos continuam vendo os originais. Uma montagem recusada ou um alvo de metamodulo inesperado interrompe a tentativa antes do carregamento do KernelSU.
 
-## Escopo
+Os registros de etapas ficam em `/data/local/tmp/rmg332-diag-*/phase.log`, sem listar nomes de modulos. O leitor `r2/ler-etapas-rmg-r2.sh` pode reuni-los pelo mesmo terminal Shizuku usado no Next. Ele nao exige root no aplicativo do terminal.
 
-Destinado ao SM-S928B ARM64 com kernel 6.1.162 EZIF/ZZI4, via Shizuku/shell UID 2000 e KernelSU Manager oficial 3.3.1. O auxiliar verifica a versão de kernel do KernelSU 32680 e `samsung_defex_broad_root=Y`. Não grava partições de firmware. O carregamento pode atualizar `/data/adb/ksud`; um daemon anterior é preservado no caminho `ksud-before` exibido no log.
+O carregamento normal ainda pode instalar o daemon e seus recursos em `/data/adb/ksud` e `/data/adb/ksu`. O auxiliar preserva um daemon anterior no caminho `ksud-before` informado no log. Nao ha gravacao de particoes de firmware nem desativacao de watchdog nesta variante.
 
-O módulo Samsung android14-6.1 embutido no daemon declara `6.1.166-dirty`. O relato positivo é específico ao aparelho/firmware acima, não uma garantia para outros kernels. O bypass DEFEX broad-root cobre tarefas UID 0 fora do domínio KernelSU; não cria uma exceção indiscriminada para processos UID 1000. O funcionamento de cada módulo, incluindo HMA/system_server, depende de teste separado.
+## Integridade e limites
 
-## Procedência e fontes
+- Payload r2: 5.719.704 bytes, SHA-256 `cb9920d28a81a2f0b8684d19f6070ad9a4e6b15398ea562cdb3984974cc3f758`.
+- Daemon do perfil: 5.566.824 bytes, SHA-256 `3487bde89b33043bd6aa09db68d21a6375aaa126e131fda53b6f6318327b0081`.
+- Alvo: SM-S928B ARM64, kernel EZIF/ZZI4 6.1.162, Shizuku/shell UID 2000 e KernelSU Manager oficial 3.3.1.
+- O modulo embutido declara `6.1.166-dirty`. O relato positivo nao garante estabilidade em outros aparelhos, kernels ou configuracoes.
+- A inicializacao do daemon se destaca em outro processo. O retorno do processo pai nao comprova que todas as etapas terminaram. A verificacao unica do auxiliar foi preservada da r1 nesta variante de diagnostico.
+- O identificador historico do perfil termina em `local-r1` e foi mantido para preservar a selecao; o nome exibido e o hash identificam a r2 atual.
 
-- Exploit ZZI4 original, sem alterações: SHA-256 `4f4255f51618e0a4044f383234f72822128e1efbca78e41149416afb52b73566`.
-- Auxiliar baseado em [su_daemon.c, revisão 6e3223e6](https://github.com/BuSung-dev/Root-My-Galaxy-Payloads/blob/6e3223e689688540060ddd97a0927e927bfed207/src/su_daemon.c). Fontes do wrapper e do auxiliar adaptado, com a licença original do auxiliar, estão em `sources/`.
-- Daemon/módulo público Samsung 3.3.1 de [rushiranpise/Root-My-Galaxy-Payloads, revisão a2b22606](https://github.com/rushiranpise/Root-My-Galaxy-Payloads/tree/a2b22606e5e681f8649cc18010f06447787a79bf/kernelsu). Esse diretório contém as adaptações Samsung e os procedimentos de compilação. Código base GPL: [KernelSU v3.3.1](https://github.com/tiann/KernelSU/tree/v3.3.1).
-- Contexto DEFEX: [HMA-OSS #137](https://github.com/frknkrc44/HMA-OSS/issues/137).
+Os arquivos r1 e o antigo placeholder permanecem por historico, mas nao sao selecionados por esta entrada atual do catalogo. Os logs do telefone, o APK, a imagem boot e os relatorios locais nao fazem parte desta publicacao.
 
-O APK, a imagem boot e os relatórios locais não fazem parte desta publicação.
+## Fontes
+
+O codigo do wrapper e do auxiliar r2 esta em `r2/sources/`. A licenca original Apache-2.0 do auxiliar permanece em `sources/LICENSE-original-helper.txt`. O auxiliar deriva de [su_daemon.c, revisao 6e3223e6](https://github.com/BuSung-dev/Root-My-Galaxy-Payloads/blob/6e3223e689688540060ddd97a0927e927bfed207/src/su_daemon.c).
+
+O daemon/modulo Samsung 3.3.1 e reutilizado sem alteracao de [Root-My-Galaxy-Payloads, revisao a2b22606](https://github.com/rushiranpise/Root-My-Galaxy-Payloads/tree/a2b22606e5e681f8649cc18010f06447787a79bf/kernelsu), que fornece as adaptacoes Samsung e os procedimentos de compilacao. Codigo base GPL: [KernelSU v3.3.1](https://github.com/tiann/KernelSU/tree/v3.3.1). Contexto da adaptacao DEFEX: [HMA-OSS #137](https://github.com/frknkrc44/HMA-OSS/issues/137).

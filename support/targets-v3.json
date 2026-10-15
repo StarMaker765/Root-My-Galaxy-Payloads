@@ -412,7 +412,7 @@
     },
     {
       "payloadId": "e3q-S928BXXU6EZIF-ksu331-defex-local-r1",
-      "displayName": "Galaxy S24 Ultra EZIF | 6.1.162 | KSU 3.3.1 + DEFEX | EXPERIMENTAL r1",
+      "displayName": "Galaxy S24 Ultra EZIF | 6.1.162 | KSU 3.3.1 | r2 DIAGNOSTIC - isolated modules",
       "models": [
         "SM-S928B"
       ],
@@ -422,9 +422,9 @@
       ],
       "flavor": "kernelsu",
       "exploit": {
-        "url": "https://raw.githubusercontent.com/StarMaker765/Root-My-Galaxy-Payloads/main/artifacts/e3q-S928BXXU6EZIF-ksu331-defex-local-r1/payload-S928B-6.1.162-KSU331-DEFEX-r1.so",
-        "size": 5715496,
-        "sha256": "99d3a7bd9f79cba40cf0030127c004ca98b9736e2a453fcab6a7ca7799afaea1"
+        "url": "https://raw.githubusercontent.com/StarMaker765/Root-My-Galaxy-Payloads/main/artifacts/e3q-S928BXXU6EZIF-ksu331-defex-local-r1/r2/payload-S928B-6.1.162-KSU331-DEFEX-DIAGNOSTICO-r2.so",
+        "size": 5719704,
+        "sha256": "cb9920d28a81a2f0b8684d19f6070ad9a4e6b15398ea562cdb3984974cc3f758"
       },
       "kernelsu": {
         "url": "https://raw.githubusercontent.com/StarMaker765/Root-My-Galaxy-Payloads/main/kernelsu/ksud-e3q-S928BXXU6EZIF-3.3.1-generic-kdp",

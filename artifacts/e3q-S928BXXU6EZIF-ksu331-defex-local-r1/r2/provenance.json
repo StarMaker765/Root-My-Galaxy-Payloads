@@ -1,0 +1,22 @@
+{
+  "revision": "r2 diagnostic",
+  "profile_id": "e3q-S928BXXU6EZIF-ksu331-defex-local-r1",
+  "artifact": "payload-S928B-6.1.162-KSU331-DEFEX-DIAGNOSTICO-r2.so",
+  "size": 5719704,
+  "sha256": "cb9920d28a81a2f0b8684d19f6070ad9a4e6b15398ea562cdb3984974cc3f758",
+  "owner_reported_kernel_loaded": true,
+  "owner_reported_stable_run": true,
+  "independent_device_test_performed": false,
+  "offline_cache_confirmed_on_device": false,
+  "full_module_operation_verified": false,
+  "defex_runtime_verified": false,
+  "helper_exit_code_in_owner_log": 42,
+  "same_exploit_and_ksud_as_r1": true,
+  "original_exploit_sha256": "4f4255f51618e0a4044f383234f72822128e1efbca78e41149416afb52b73566",
+  "daemon_sha256": "3487bde89b33043bd6aa09db68d21a6375aaa126e131fda53b6f6318327b0081",
+  "daemon_source_commit": "a2b22606e5e681f8649cc18010f06447787a79bf",
+  "module_vermagic": "6.1.166-dirty",
+  "target_kernel": "6.1.162",
+  "module_isolation": "private mount namespace; originals not renamed or deleted",
+  "phase_log": "/data/local/tmp/rmg332-diag-*/phase.log"
+}

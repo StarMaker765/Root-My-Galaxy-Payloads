@@ -1,0 +1,18 @@
+{
+  "revision": "r3 checks fix",
+  "artifact": "payload.so",
+  "bytes": 5721760,
+  "sha256": "c5323f10f2eaa92c6b5edc3907a00a23b133e0d026ebdce92459f277bf7aabda",
+  "target_model": "SM-S928B",
+  "audited_kernel_release": "6.1.162-android14-11-34343818-abS928BXXU6EZIF",
+  "compiler": "Android (16134705, based on r574158c) clang version 21.0.0 (https://android.googlesource.com/toolchain/llvm-project 9f872551d3c681d06fd303b36f16ed5c274735eb)",
+  "compiler_target": "aarch64-linux-android35",
+  "helper_sha256": "d2920c22dc787dc2158120c74ed42e4431013c30142b2ede7437321b56d58beb",
+  "exploit_sha256": "4f4255f51618e0a4044f383234f72822128e1efbca78e41149416afb52b73566",
+  "daemon_sha256": "3487bde89b33043bd6aa09db68d21a6375aaa126e131fda53b6f6318327b0081",
+  "daemon_changed": false,
+  "embedded_module_recompiled": false,
+  "embedded_module_vermagic": "6.1.166-dirty",
+  "preserves_r2_private_module_isolation": true,
+  "device_test_of_r3_performed": false
+}

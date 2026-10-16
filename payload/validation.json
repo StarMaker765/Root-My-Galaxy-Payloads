@@ -1,0 +1,31 @@
+{
+  "host_module_state_regressions_passed": 13,
+  "compile_warnings_as_errors": true,
+  "original_exploit_preserved": true,
+  "original_ksud_preserved": true,
+  "feed_size_sha256_match": true,
+  "elf": {
+    "payload": {
+      "machine": "EM_AARCH64",
+      "load_alignment": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "executable_stack": false
+    },
+    "helper": {
+      "machine": "EM_AARCH64",
+      "load_alignment": [
+        16384,
+        16384,
+        16384,
+        16384
+      ],
+      "executable_stack": false
+    }
+  },
+  "device_test_of_r3_performed": false,
+  "single_profile_catalog": true
+}

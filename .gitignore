@@ -1,2 +1,4 @@
 /build/
 /diagnostics/
+__pycache__/
+*.pyc

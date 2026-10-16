@@ -1,103 +1,61 @@
-# Root My Galaxy Payloads
+# Galaxy S24 Ultra Payload
 
-This repository contains the device-specific native side of
-[Root My Galaxy](https://github.com/BuSung-dev/Root-My-Galaxy):
+**S24 Ultra | KernelSU 3.3.1** is a device-specific payload for
+[Root My Galaxy Next](https://github.com/rushiranpise/Root-My-Galaxy-Next).
+This repository publishes only the SM-S928B EZIF profile and its supporting files.
 
-- exact firmware profiles and offsets;
-- the app-domain CVE-2026-43499 exploit source and compiled payload;
-- the app bootstrap helper source;
-- the verified KernelSU late-load build artifacts;
-- the support feed consumed by the application.
+| Item | Supported target |
+| --- | --- |
+| Device | Samsung Galaxy S24 Ultra (SM-S928B) |
+| Firmware | S928BXXU6EZIF |
+| Kernel | `6.1.162-android14-11-34343818-abS928BXXU6EZIF` |
+| KernelSU | 3.3.1, Samsung KDP/RKP/DEFEX variant |
+| Application used in the installation report | Root My Galaxy Next 0.13+ci.53.1cc7bf0 |
 
-It intentionally does not contain Android application source code.
+## Online installation
 
-## Supported payloads
+1. In Root My Galaxy Next, set the GitHub payload source to
+   `StarMaker765/Root-My-Galaxy-Payloads`, branch `main`, and refresh the source.
+2. Select **S24 Ultra | KernelSU 3.3.1**. Remove any previous Local payload override
+   so Online mode downloads the published files.
+3. Use Shizuku and Install KernelSU. For the first run of this revision, keep
+   automatic soft restart off and save the installation log.
 
-| Payload | Compatible models | Kernel version | Status |
-| --- | --- | --- | --- |
-| `galaxy-s25-series-2026-06-07` | Galaxy S25, S25+, S25 Edge, and S25 Ultra regional models | `6.6.98` | Device-tested |
-| `e3q-S928USQS6DZF2` | Galaxy S24 Ultra `SM-S928U1` | `6.1.145` | Device-tested |
-| `e3q-S9280ZCS6DZF2` | Galaxy S24 Ultra China `SM-S9280` | `6.1.145` | Device-tested |
-| `e2s-S926BXXUEDZDR` | Galaxy S24+ `SM-S926B` | `6.1.157` | Device-tested |
-| `essi-A566EXXSCCZG6` | Galaxy A56 5G `SM-A566E` | `6.6.102` | Device-tested |
-| `a36xq-A366WVLS3AYG1` | Galaxy A36 5G `SM-A366W` | `6.6.46` | Device-tested |
-| `a53x-A536EXXSNGZG3` | Galaxy A53 5G `SM-A536E` | `5.10.237` | Device-tested |
-| `dm3q-S9180ZHS8FZF5` | Galaxy S23 Ultra `SM-S9180` | `5.15.189` | Test in progress |
-| `q4q-F9360ZCSAIZF1` | Galaxy Z Fold4 `SM-F9360` | `5.10.236` | Device-tested |
-| `dm2q-S916BXXSAFZG1` | Galaxy S23+ `SM-S916B` | `5.15.189` | Experimental: hardware root from ADB shell; not in app feed |
-| `dm3q-S918BXXSAFZF5` | Galaxy S23 Ultra `SM-S918B` | `5.15.189` | Confirmed working: full chain through the app (Shizuku mode) incl. KernelSU late-load and granted `su` |
+If KernelSU is already loaded, perform a full device restart before attempting
+a new installation. A soft reboot keeps the kernel and KernelSU loaded; the
+payload deliberately refuses to load a second copy.
 
-The S916B FZG1 profile is shell-only today. Its exact tracefs route works from `adb shell`, but direct app-domain execution is not supported. Root My Galaxy would need to delegate the native runner through an authorized shell bridge such as Shizuku. See [`artifacts/dm2q-S916BXXSAFZG1/README.md`](artifacts/dm2q-S916BXXSAFZG1/README.md).
+The [v3 feed](support/targets-v3.json) contains one profile and the actual file
+sizes and SHA-256 digests. The internal profile ID is preserved so existing
+selections retain their identity. Online download and offline cache behavior
+still require confirmation on the device with this revision.
 
-The S918B FZF5 profile is hardware-verified through the app's Shizuku mode (exploit, KernelSU late-load, granted `su` under enforcing). Its physical-P0 fallback also engages in unprivileged app-domain execution, but rooting without Shizuku is not yet hardware-confirmed. See [`docs/SM-S918B-S918BXXSAFZF5.md`](docs/SM-S918B-S918BXXSAFZF5.md).
+## Current correction
 
-Schema version 3 keeps each exploit and KernelSU artifact once. Its flat
-`models` and `kernelVersions` arrays define runtime compatibility. See
-[`support/README.md`](support/README.md) for the matching rules.
+The r3 loader fixes a false error 42 caused by checking a KernelSU sysfs entry
+that release builds deliberately remove. It verifies the native driver version
+and flags first, distinguishes an unavailable DEFEX parameter from a failed
+read, and detects an already loaded module through `/proc/modules`.
 
-The port is based on the exploit source published at
-<https://github.com/NebuSec/CyberMeowfia/tree/main/IonStack/CVE-2026-43499/exploit>.
+The exploit and Samsung `ksud` 3.3.1 are unchanged. This release does not include
+a newly compiled 6.1.162 kernel module. The embedded 6.1 module still reports
+`6.1.166-dirty`; see [the daemon notes](kernelsu/README.md) for the compatibility
+audit and its limits.
 
-## Feed delivery
+The owner reported a successful soft reboot with KernelSU still active after
+uninstalling OverlayFS Enhanced 1.3.4 on the previous payload. That implicates
+the metamodule or its interaction with other modules; no panic backtrace was
+available to identify the failing instruction. This payload does not repair
+or validate that metamodule.
 
-Root My Galaxy resolves the payload repository's current commit first and
-fetches `support/targets-v3.json` and every artifact from that immutable
-commit. Per-artifact SHA-256 fields and manifest signatures are not part of
-schema version 3. `targets-v2.json` is retained for released 0.2.3 clients.
+## Validation and files
 
-## Build
+- [Validation and device evidence](docs/VALIDATION.md)
+- [Payload sources, build instructions and diagnostics](payload/README.md)
+- [KernelSU daemon and Samsung patch](kernelsu/README.md)
+- [Online source details](support/README.md)
+- [Third-party credits and licenses](THIRD_PARTY_NOTICES.md)
 
-```sh
-make TARGET=pa3q-S938NKSUACZF1 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=e3q-S928USQS6DZF2 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=e2s-S926BXXUEDZDR ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=essi-S721NKSSCDZF3 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=e1s-S921BXXSFDZF2 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=a15-A155NKSS6BYH1 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=essi-A566EXXSCCZG6 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=a36xq-A366WVLS3AYG1 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=a53x-A536EXXSNGZG3 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=dm3q-S9180ZHS8FZF5 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=q4q-F9360ZCSAIZF1 ANDROID_NDK_HOME=/path/to/android-ndk
-make TARGET=dm2q-S916BXXSAFZG1 ANDROID_NDK_HOME=/path/to/android-ndk
-```
-
-Outputs:
-
-```text
-build/<profile>/cve-2026-43499
-build/<profile>/cve-2026-43499-app.so
-build/<profile>/cve-2026-43499-root
-```
-
-The release app payload is built with:
-
-```sh
-make TARGET=essi-S721NKSSCDZF3 ANDROID_NDK_HOME=/path/to/android-ndk release
-```
-
-The complete firmware-to-profile procedure is recorded in
-[`docs/PORTING.md`](docs/PORTING.md). Samsung-specific KernelSU changes and
-versioned artifacts are documented in [`kernelsu/README.md`](kernelsu/README.md).
-The exact S921B DZF2 analysis is recorded separately in
-[`docs/SM-S921B-S921BXXSFDZF2.md`](docs/SM-S921B-S921BXXSFDZF2.md), and the
-S928U/S928U1 DZF2 analysis is in
-[`docs/SM-S928U1-S928U1UES6DZF2.md`](docs/SM-S928U1-S928U1UES6DZF2.md). S921B
-is an Exynos 2400 target and is not a Qualcomm/Snapdragon reference for E3Q.
-The 5.10 A15 analysis is in
-[`docs/SM-A155N-A155NKSS6BYH1.md`](docs/SM-A155N-A155NKSS6BYH1.md).
-The SM-A566E CCZG6 analysis and validation record is in
-[`docs/SM-A566E-A566EXXSCCZG6.md`](docs/SM-A566E-A566EXXSCCZG6.md).
-The SM-S926B DZDR analysis and device-validation record is in
-[`docs/SM-S926B-S926BXXUEDZDR.md`](docs/SM-S926B-S926BXXUEDZDR.md).
-The SM-A366W AYG1 device validation is in
-[`docs/SM-A366W-A366WVLS3AYG1.md`](docs/SM-A366W-A366WVLS3AYG1.md).
-The SM-F9360 AIZF1 (5.10, locked-BL, no-LTO clang-12 module) validation is in
-[`docs/SM-F9360-F9360ZCSAIZF1.md`](docs/SM-F9360-F9360ZCSAIZF1.md).
-The experimental SM-S916B FZG1 shell port and its exact hardware evidence are in [`docs/SM-S916B-S916BXXSAFZG1.md`](docs/SM-S916B-S916BXXSAFZG1.md).
-The SM-A536E GZG3 device validation is in
-[`docs/SM-A536E-A536EXXSNGZG3.md`](docs/SM-A536E-A536EXXSNGZG3.md).
-The SM-S9280 China (CHC) DZF2 port and validation record is in
-[`docs/SM-S9280-S9280ZCS6DZF2.md`](docs/SM-S9280-S9280ZCS6DZF2.md).
-
-Use only on devices you own or are explicitly authorized to test.
+The ARM64 build and 13 host regression cases passed. The r3 correction has not
+yet been installed or tested on the device. Support is restricted to the exact
+kernel release listed above; other S24 variants and firmware are not covered.
